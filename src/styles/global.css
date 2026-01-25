@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+
+:root {
+  --scale: 1.25;
+}
+
+h1 {
+  @apply font-extrabold text-5xl text-balance tracking-tight not-first:mt-8 mb-8;
+}
+
+h2 {
+  @apply font-bold text-3xl text-balance tracking-tight not-first:mt-8 mb-5;
+}
