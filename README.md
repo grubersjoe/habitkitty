@@ -1,3 +1,15 @@
-# React + TypeScript + Vite + shadcn/ui
+# HabitKitty
 
-This is a template for a new Vite project with React, TypeScript, and shadcn/ui.
+Web-based visualization of your [HabitKit](https://www.habitkit.app) data.
+
+## Usage
+
+TODO
+
+## Development server
+
+Start the development server to enjoy hot-reloading:
+
+```shell
+npm run dev
+```
