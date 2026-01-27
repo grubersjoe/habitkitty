@@ -16,7 +16,7 @@ export function App() {
       .sort((a, b) => a.orderIndex - b.orderIndex) || []
 
   return (
-    <main className="mx-auto px-12 py-6">
+    <main className="mx-auto px-12 py-6 pb-10">
       <h1>
         Habit<span className="text-pink-700 dark:text-pink-600">Kitty</span>
       </h1>
