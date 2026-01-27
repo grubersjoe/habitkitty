@@ -27,7 +27,7 @@ export function Dropzone({ onDrop }: Required<Pick<DropzoneProps, 'onDrop'>>) {
         )}
       >
         <span className="font-medium text-zinc-500 dark:text-zinc-300">
-          Click or drop your HabitKit export here
+          Click or drag your HabitKit export here
         </span>
       </button>
 
