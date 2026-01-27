@@ -21,7 +21,7 @@ export function App() {
         Habit<span className="text-pink-700 dark:text-pink-600">Kitty</span>
       </h1>
       <p className="-mt-8 mb-6">
-        Visualize your <a href="https://www.habitkit.app/">HabitKit</a> data.
+        Visualize your <a href="https://www.habitkit.app">HabitKit</a> data.
       </p>
 
       <Dropzone
