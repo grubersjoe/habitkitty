@@ -15,5 +15,9 @@ h1 {
 }
 
 h2 {
-  @apply font-semibold text-[26px] text-balance mb-4;
+  @apply font-bold text-[24px] text-balance mb-4;
+}
+
+a {
+  @apply text-pink-700 dark:text-pink-600 hover:underline;
 }
