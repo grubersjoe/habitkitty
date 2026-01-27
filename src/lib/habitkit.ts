@@ -1,18 +1,9 @@
 import type { Activity } from 'react-activity-calendar'
 import { addMinutes, format, getYear } from 'date-fns'
-import data from '../../habitkit_export.json'
-
-export const getHabit = (habitId: string) => {
-  const habit = data.habits.find((h) => h.id === habitId)
-
-  if (!habit) {
-    throw new Error(`Habit ${habitId} not found`)
-  }
-
-  return habit
-}
+import type { HabitKit } from '@/lib/schema.ts'
 
 export const getActivitiesFor = (
+  data: HabitKit,
   habitId: string,
   year: number,
 ): { activities: Activity[]; maxLevel: number } => {

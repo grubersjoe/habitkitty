@@ -21,11 +21,13 @@ export function Dropzone({ onDrop }: Required<Pick<DropzoneProps, 'onDrop'>>) {
 
       <div
         className={cn(
-          'w-full min-h-22 flex flex-col gap-1 items-center justify-center p-4 text-sm transition-colors rounded-lg border border-dashed bg-gray-100 border-gray-300',
-          isDragActive && 'bg-gray-200 border-gray-400',
+          'w-full min-h-22 flex flex-col gap-1 items-center justify-center p-4 text-sm transition-colors rounded-lg border border-dashed bg-zinc-100 border-zinc-400 dark:bg-zinc-800 dark:border-zinc-600 hover:bg-zinc-200 hover:border-zinc-500 hover:dark:bg-zinc-700 hover:dark:border-zinc-500',
+          isDragActive && 'bg-zinc-200 border-zinc-500 dark:bg-zinc-700 dark:border-zinc-500',
         )}
       >
-        <span className="font-medium text-gray-500">Drop your HabitKit export here</span>
+        <span className="font-medium text-zinc-500 dark:text-zinc-300">
+          Drop your HabitKit export here
+        </span>
 
         {rejectedFiles.length > 0 && <span className="text-red-600">Invalid file</span>}
       </div>

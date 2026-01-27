@@ -1,30 +1,37 @@
 import { ActivityCalendar } from 'react-activity-calendar'
 import 'react-activity-calendar/tooltips.css'
-import { getActivitiesFor, getHabit } from '@/lib/habitkit'
+import colors from 'tailwindcss/colors'
+import { getActivitiesFor } from '@/lib/habitkit'
+import type { Habit, HabitKit } from '@/lib/schema.ts'
 
 type Props = {
-  habitId: string
+  data: HabitKit
+  habit: Habit
   year: number
 }
 
-export const Calendar = ({ habitId, year }: Props) => {
-  const habit = getHabit(habitId)
-  const { activities, maxLevel } = getActivitiesFor(habit.id, year)
+export const Calendar = ({ data, habit, year }: Props) => {
+  const { activities, maxLevel } = getActivitiesFor(data, habit.id, year)
 
   if (activities.length === 0) {
-    return <p>No data.</p>
+    return (
+      <p>
+        No completions of ${habit.name} in ${year}.
+      </p>
+    )
   }
 
   return (
     <ActivityCalendar
       data={activities}
       theme={{
-        light: ['hsl(0, 0%, 92%)', 'purple'],
+        light: [colors.zinc['50'], colors[habit.color][500]],
+        dark: [colors.zinc['900'], colors[habit.color][300]],
       }}
       maxLevel={maxLevel}
       tooltips={{
         activity: {
-          text: (activity) => `${activity.count} completion on ${activity.date}`,
+          text: activity => `${activity.count} completion on ${activity.date}`,
         },
       }}
       showColorLegend={false}

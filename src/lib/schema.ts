@@ -1,13 +1,37 @@
 import { z } from 'zod'
 
-export const habitKitSchema = z.object({
+const colors = [
+  'red',
+  'orange',
+  'amber',
+  'yellow',
+  'lime',
+  'green',
+  'emerald',
+  'teal',
+  'cyan',
+  'sky',
+  'blue',
+  'indigo',
+  'violet',
+  'purple',
+  'fuchsia',
+  'pink',
+  'rose',
+  'slate',
+  'gray',
+  'neutral',
+  'stone',
+] as const
+
+export const habitKit = z.object({
   habits: z.array(
     z.object({
       id: z.uuid(),
       name: z.string(),
       description: z.string().nullable(),
       icon: z.string(),
-      color: z.string(),
+      color: z.enum(colors),
       archived: z.boolean(),
       orderIndex: z.number(),
       createdAt: z.iso.datetime(),
@@ -74,4 +98,6 @@ export const habitKitSchema = z.object({
   ),
 })
 
-export type HabitKitSchema = z.infer<typeof habitKitSchema>
+export type HabitKit = z.infer<typeof habitKit>
+
+export type Habit = HabitKit['habits'][number]

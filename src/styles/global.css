@@ -4,10 +4,16 @@
   --scale: 1.25;
 }
 
+@layer base {
+  body {
+    @apply bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-50;
+  }
+}
+
 h1 {
   @apply font-extrabold text-[48px] text-balance tracking-tight not-first:mt-8 mb-8;
 }
 
 h2 {
-  @apply font-semibold text-[26px] text-balance not-first:mt-8 mb-4;
+  @apply font-semibold text-[26px] text-balance mb-4;
 }
