@@ -26,10 +26,10 @@
   }
 
   h2 {
-    @apply font-semibold text-[20px] text-balance mb-3;
+    @apply font-semibold text-[20px] text-balance mb-2.5;
 
     @media (width >= 48rem) {
-      @apply text-[24px];
+      @apply text-[22px];
     }
   }
 

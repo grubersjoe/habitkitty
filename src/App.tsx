@@ -1,6 +1,6 @@
+import { useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Dropzone } from '@/components/dropzone.tsx'
-import { useState } from 'react'
 import { Calendar } from '@/components/calendar.tsx'
 import { habitKit, type HabitKit } from '@/lib/schema.ts'
 
@@ -16,15 +16,16 @@ export function App() {
       .sort((a, b) => a.orderIndex - b.orderIndex) || []
 
   return (
-    <main className="mx-auto p-5 md:px-12 md:py-6 mb:pb-10">
+    <main className="mx-auto p-[20px] md:px-10 md:py-8">
       <h1>
         Habit<span className="text-pink-700 dark:text-pink-600">Kitty</span>
       </h1>
-      <p className="-mt-8 mb-6 text-lg">
+      <p className="-mt-8 text-lg">
         Visualize your <a href="https://www.habitkit.app">HabitKit</a> data
       </p>
 
       <Dropzone
+        className="mt-8 mb-9 md:mb-10"
         onDrop={async acceptedFiles => {
           if (acceptedFiles.length > 0) {
             const text = await acceptedFiles[0].text()
@@ -44,17 +45,16 @@ export function App() {
       {/* TODO: year selection */}
 
       {/* TODO: handle validation errors */}
+      {/* TODO: switch to shadcn alert component */}
       {error && (
-        <div role="alert" className="max-w-xl my-10 md:text-sm">
-          <div className="bg-red-500 text-white font-semibold rounded-t px-4 py-1">Error</div>
-          <div className="border border-t-0 border-red-300 rounded-b bg-red-100 px-4 py-3 text-red-700">
-            <p>${error.message}.</p>
-          </div>
+        <div role="alert" className="my-8 bg-red-50 border-l-3 border-red-500 text-red-700 p-4">
+          <p className="font-semibold mb-1">Error</p>
+          <p>{error.message}.</p>
         </div>
       )}
 
       {data && (
-        <div className="mt-8 md:mt-10 grid grid-cols-[repeat(auto-fill,minmax(min(100%,860px),860px))] gap-8">
+        <div className="my-9 md:my-10 grid grid-cols-[repeat(auto-fill,minmax(min(100%,848px),848px))] gap-9 md:gap-x-14 md:gap-y-10">
           {habits.map(habit => (
             <div key={habit.id}>
               <h2>{habit.name}</h2>
@@ -66,7 +66,9 @@ export function App() {
         </div>
       )}
 
-      <p className="mt-10 text-muted-foreground md:text-sm">
+      <p className="text-muted-foreground md:text-sm">
+        Made with love by <a href="https://github.com/grubersjoe/habitkitty">@grubersjoe</a>.
+        <br />
         This tool is not affiliated with <a href="https://www.habitkit.app">HabitKit</a>.
       </p>
     </main>

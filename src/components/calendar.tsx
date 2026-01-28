@@ -25,7 +25,7 @@ export const Calendar = ({ data, habit, year }: Props) => {
     <ActivityCalendar
       data={activities}
       theme={{
-        light: [colors.zinc['50'], colors[habit.color][500]],
+        light: [colors.zinc['50'], colors[habit.color][400]],
         dark: [colors.zinc['900'], colors[habit.color][300]],
       }}
       maxLevel={maxLevel}
