@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
+import { CircleX as CircleXIcon } from 'lucide-react'
+
 import { Dropzone } from '@/components/dropzone.tsx'
 import { Calendar } from '@/components/calendar.tsx'
 import { habitKit, type HabitKit } from '@/lib/schema.ts'
+import { ThemeToggle } from '@/components/theme-toggle.tsx'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx'
 
 export function App() {
   const [data, setData] = useState<HabitKit>()
@@ -16,13 +20,18 @@ export function App() {
       .sort((a, b) => a.orderIndex - b.orderIndex) || []
 
   return (
-    <main className="mx-auto p-5 md:px-10 md:py-8">
-      <h1>
-        Habit<span className="text-pink-700 dark:text-pink-600">Kitty</span>
-      </h1>
-      <p className="-mt-7 md:-mt-5 md:text-lg">
-        Visualize your <a href="https://www.habitkit.app">HabitKit</a> data
-      </p>
+    <main className="mx-auto p-5 md:p-10">
+      <div className="flex justify-between items-start">
+        <div>
+          <h1 className="md:mt-1">
+            Habit<span className="text-pink-700 dark:text-pink-600">Kitty</span>
+          </h1>
+          <p className="-mt-7 md:-mt-5 md:text-lg">
+            Visualize your <a href="https://www.habitkit.app">HabitKit</a> data
+          </p>
+        </div>
+        <ThemeToggle />
+      </div>
 
       <Dropzone
         className="mt-6 mb-8"
@@ -45,11 +54,13 @@ export function App() {
       {/* TODO: year selection */}
 
       {/* TODO: handle validation errors */}
-      {/* TODO: switch to shadcn alert component */}
       {error && (
-        <div role="alert" className="my-10 bg-red-50 border-l-3 border-red-500 text-red-700 p-4">
-          <p className="font-semibold mb-1">Error</p>
-          <p>{error.message}.</p>
+        <div className="my-10 grid w-full max-w-md items-start gap-4">
+          <Alert variant="destructive">
+            <CircleXIcon />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error.message}</AlertDescription>
+          </Alert>
         </div>
       )}
 

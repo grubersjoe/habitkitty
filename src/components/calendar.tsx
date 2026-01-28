@@ -1,8 +1,10 @@
 import { ActivityCalendar } from 'react-activity-calendar'
 import 'react-activity-calendar/tooltips.css'
 import colors from 'tailwindcss/colors'
+
 import { getActivitiesFor } from '@/lib/habitkit'
 import type { Habit, HabitKit } from '@/lib/schema.ts'
+import { useTheme } from '@/theme.tsx'
 
 type Props = {
   data: HabitKit
@@ -12,6 +14,7 @@ type Props = {
 
 export const Calendar = ({ data, habit, year }: Props) => {
   const { activities, maxLevel } = getActivitiesFor(data, habit.id, year)
+  const { theme } = useTheme()
 
   if (activities.length === 0) {
     return (
@@ -24,9 +27,10 @@ export const Calendar = ({ data, habit, year }: Props) => {
   return (
     <ActivityCalendar
       data={activities}
+      colorScheme={theme}
       theme={{
         light: [colors.zinc['50'], colors[habit.color][400]],
-        dark: [colors.zinc['900'], colors[habit.color][300]],
+        dark: [colors.zinc['900'], colors[habit.color][500]],
       }}
       maxLevel={maxLevel}
       tooltips={{

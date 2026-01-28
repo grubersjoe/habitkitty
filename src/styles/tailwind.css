@@ -120,10 +120,32 @@
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    @apply font-sans;
+  }
+
   body {
     @apply font-sans bg-background text-foreground;
   }
-  html {
-    @apply font-sans;
+
+  h1 {
+    @apply font-extrabold text-[40px] text-balance tracking-tight not-first:mt-8 mb-8;
+
+    @media (width >= 48rem) {
+      @apply text-5xl;
+    }
+  }
+
+  h2 {
+    @apply font-semibold text-xl text-balance mb-2.5;
+
+    @media (width >= 48rem) {
+      @apply text-2xl;
+    }
+  }
+
+  a {
+    @apply text-pink-700 dark:text-pink-600 hover:underline;
   }
 }
