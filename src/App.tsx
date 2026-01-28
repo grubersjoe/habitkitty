@@ -16,16 +16,16 @@ export function App() {
       .sort((a, b) => a.orderIndex - b.orderIndex) || []
 
   return (
-    <main className="mx-auto p-[20px] md:px-10 md:py-8">
+    <main className="mx-auto p-5 md:px-10 md:py-8">
       <h1>
         Habit<span className="text-pink-700 dark:text-pink-600">Kitty</span>
       </h1>
-      <p className="-mt-8 text-lg">
+      <p className="-mt-7 md:-mt-5 md:text-lg">
         Visualize your <a href="https://www.habitkit.app">HabitKit</a> data
       </p>
 
       <Dropzone
-        className="mt-8 mb-9 md:mb-10"
+        className="mt-6 mb-8"
         onDrop={async acceptedFiles => {
           if (acceptedFiles.length > 0) {
             const text = await acceptedFiles[0].text()
@@ -47,14 +47,14 @@ export function App() {
       {/* TODO: handle validation errors */}
       {/* TODO: switch to shadcn alert component */}
       {error && (
-        <div role="alert" className="my-8 bg-red-50 border-l-3 border-red-500 text-red-700 p-4">
+        <div role="alert" className="my-10 bg-red-50 border-l-3 border-red-500 text-red-700 p-4">
           <p className="font-semibold mb-1">Error</p>
           <p>{error.message}.</p>
         </div>
       )}
 
       {data && (
-        <div className="my-9 md:my-10 grid grid-cols-[repeat(auto-fill,minmax(min(100%,848px),848px))] gap-9 md:gap-x-14 md:gap-y-10">
+        <div className="my-8 md:my-10 grid grid-cols-[repeat(auto-fill,minmax(min(100%,848px),848px))] gap-8 md:gap-x-14 md:gap-y-10">
           {habits.map(habit => (
             <div key={habit.id}>
               <h2>{habit.name}</h2>
@@ -66,7 +66,7 @@ export function App() {
         </div>
       )}
 
-      <p className="text-muted-foreground md:text-sm">
+      <p className="text-muted-foreground text-sm">
         Made with love by <a href="https://github.com/grubersjoe/habitkitty">@grubersjoe</a>.
         <br />
         This tool is not affiliated with <a href="https://www.habitkit.app">HabitKit</a>.
