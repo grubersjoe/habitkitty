@@ -7,7 +7,7 @@ export const getActivitiesFor = (
   habitId: string,
   year: number,
 ): { activities: Activity[]; maxLevel: number } => {
-  const interval = data.intervals.find((i) => i.habitId === habitId)
+  const interval = data.intervals.find(i => i.habitId === habitId)
 
   if (!interval) {
     throw new Error(`Habit ${habitId} not found`)
@@ -16,11 +16,11 @@ export const getActivitiesFor = (
   const { requiredNumberOfCompletionsPerDay } = interval
 
   const rawActivities = data.completions
-    .filter((c) => {
+    .filter(c => {
       const date = addMinutes(new Date(c.date), c.timezoneOffsetInMinutes)
       return c.habitId === habitId && getYear(date) === year
     })
-    .map((c) => ({
+    .map(c => ({
       date: format(addMinutes(new Date(c.date), c.timezoneOffsetInMinutes), 'yyyy-MM-dd'),
       level: c.amountOfCompletions,
       count: c.amountOfCompletions,
