@@ -4,7 +4,7 @@ import colors from 'tailwindcss/colors'
 
 import { getActivitiesFor } from '@/lib/habitkit'
 import type { Habit, HabitKit } from '@/lib/schema.ts'
-import { useTheme } from '@/theme.tsx'
+import { useTheme } from '@/lib/theme.tsx'
 
 type Props = {
   data: HabitKit

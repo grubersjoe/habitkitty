@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils.ts'
+import { cn } from '@/lib/tailwind.ts'
 import { type DropzoneProps, type FileRejection, useDropzone } from 'react-dropzone'
 import { useState } from 'react'
 

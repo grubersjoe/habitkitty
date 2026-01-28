@@ -1,10 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 
-import './styles/tailwind.css'
+import './tailwind.css'
 
-import App from './App.tsx'
-import { ThemeProvider } from '@/theme.tsx'
+import App from './components/App.tsx'
+import { ThemeProvider } from '@/lib/theme.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

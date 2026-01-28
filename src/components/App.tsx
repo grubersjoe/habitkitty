@@ -2,17 +2,17 @@ import { useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { CircleX as CircleXIcon } from 'lucide-react'
 
-import { Dropzone } from '@/components/dropzone.tsx'
-import { Calendar } from '@/components/calendar.tsx'
 import { habitKit, type HabitKit } from '@/lib/schema.ts'
-import { ThemeToggle } from '@/components/theme-toggle.tsx'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert.tsx'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert.tsx'
+import { Calendar } from '@/components/Calendar.tsx'
+import { Dropzone } from '@/components/Dropzone.tsx'
+import { ThemeToggle } from '@/components/ThemeToggle.tsx'
 
 export function App() {
   const [data, setData] = useState<HabitKit>()
   const [error, setError] = useState<Error>()
 
-  const year = 2026
+  const year = 2026 // FIXME
   const habits =
     data?.habits
       .filter(({ archived }) => !archived)
