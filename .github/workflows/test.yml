@@ -1,0 +1,35 @@
+name: Tests
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.2.0
+        with:
+          version: latest
+          run_install: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v6.2.0
+        with:
+          node-version: node
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install -r --ignore-scripts
+
+      - name: Check formatting (Prettier)
+        run: pnpm exec prettier -c .
+
+      - name: Run type checks (TypeScript)
+        run: pnpm tsc
+
+      - name: Run linter (ESLint)
+        run: pnpm lint
