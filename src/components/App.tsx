@@ -30,7 +30,7 @@ export function App() {
             Visualize your <a href="https://www.habitkit.app">HabitKit</a> data
           </p>
         </div>
-        <ThemeToggle />
+        <ThemeToggle className="m-1 md:m-0" />
       </div>
 
       <Dropzone
