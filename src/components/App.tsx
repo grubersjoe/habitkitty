@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
+import { ZodError } from 'zod'
 import { CircleX as CircleXIcon } from 'lucide-react'
 
 import { habitKit, type HabitKit } from '@/lib/schema.ts'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert.tsx'
 import { Calendar } from '@/components/Calendar.tsx'
+import { CopyButton } from '@/components/CopyButton.tsx'
 import { Dropzone } from '@/components/Dropzone.tsx'
 import { ThemeToggle } from '@/components/ThemeToggle.tsx'
 
@@ -16,7 +18,7 @@ export function App() {
   const habits =
     data?.habits
       .filter(({ archived }) => !archived)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .sort((a, b) => a.orderIndex - b.orderIndex) || []
 
   return (
@@ -55,11 +57,32 @@ export function App() {
 
       {/* TODO: handle validation errors */}
       {error && (
-        <div className="my-10 grid w-full max-w-md items-start gap-4">
+        <div className="my-10 grid w-full max-w-2xl items-start gap-4">
           <Alert variant="destructive">
             <CircleXIcon />
             <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error.message}</AlertDescription>
+            <AlertDescription>
+              {error instanceof ZodError ? (
+                <>
+                  <p>
+                    HabitKit export does not match expected schema.
+                    <br />
+                    <a
+                      href="https://github.com/grubersjoe/habitkitty/issues/new"
+                      target="_blank"
+                      className="text-inherit hover:text-inherit"
+                    >
+                      Please create an issue
+                    </a>{' '}
+                    and post the following:
+                  </p>
+                  <CopyButton text={error.message}>Copy output</CopyButton>
+                  <pre className="mt-4">{error.message}</pre>
+                </>
+              ) : (
+                error.message
+              )}
+            </AlertDescription>
           </Alert>
         </div>
       )}

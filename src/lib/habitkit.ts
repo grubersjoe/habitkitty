@@ -17,11 +17,11 @@ export const getActivitiesFor = (
 
   const rawActivities = data.completions
     .filter(c => {
-      const date = addMinutes(new Date(c.date), c.timezoneOffsetInMinutes)
+      const date = addMinutes(c.date, c.timezoneOffsetInMinutes)
       return c.habitId === habitId && getYear(date) === year
     })
     .map(c => ({
-      date: format(addMinutes(new Date(c.date), c.timezoneOffsetInMinutes), 'yyyy-MM-dd'),
+      date: format(addMinutes(c.date, c.timezoneOffsetInMinutes), 'yyyy-MM-dd'),
       level: c.amountOfCompletions,
       count: c.amountOfCompletions,
     }))
