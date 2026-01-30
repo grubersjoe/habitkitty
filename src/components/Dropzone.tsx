@@ -1,6 +1,6 @@
-import { cn } from '@/lib/tailwind.ts'
-import { type DropzoneProps, type FileRejection, useDropzone } from 'react-dropzone'
 import { useState } from 'react'
+import { type DropzoneProps, type FileRejection, useDropzone } from 'react-dropzone'
+import { cn } from '@/lib/tailwind.ts'
 
 export function Dropzone({
   onDrop,
@@ -28,13 +28,11 @@ export function Dropzone({
       <button
         type="button"
         className={cn(
-          'w-full min-h-22 flex flex-col gap-1 items-center justify-center p-4 ease-out rounded-lg border border-dashed bg-zinc-100 border-zinc-400 dark:bg-zinc-800 dark:border-zinc-600 hover:border-zinc-500 hover:dark:border-zinc-500 cursor-pointer',
+          'w-full min-h-22 p-4 rounded-lg border border-dashed bg-zinc-100 border-zinc-400 dark:bg-zinc-800 dark:border-zinc-600 hover:border-zinc-500 hover:dark:border-zinc-500 text-zinc-500 dark:text-zinc-300 text-sm cursor-pointer',
           isDragActive && 'border-zinc-500 dark:border-zinc-500 ',
         )}
       >
-        <span className="text-zinc-500 dark:text-zinc-300 text-sm">
-          Click or drag your HabitKit export here
-        </span>
+        Click or drag your HabitKit export here
       </button>
 
       {rejectedFiles.length > 0 && (
