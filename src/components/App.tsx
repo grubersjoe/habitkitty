@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
+import { ZodError } from 'zod'
 import { CircleX as CircleXIcon } from 'lucide-react'
 
 import { habitKit, type HabitKit } from '@/lib/schema.ts'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert.tsx'
 import { Calendar } from '@/components/Calendar.tsx'
+import { CopyButton } from '@/components/CopyButton.tsx'
 import { Dropzone } from '@/components/Dropzone.tsx'
 import { ThemeToggle } from '@/components/ThemeToggle.tsx'
 
@@ -16,7 +18,7 @@ export function App() {
   const habits =
     data?.habits
       .filter(({ archived }) => !archived)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .sort((a, b) => a.orderIndex - b.orderIndex) || []
 
   return (
@@ -33,33 +35,62 @@ export function App() {
         <ThemeToggle className="m-1 md:m-0" />
       </div>
 
-      <Dropzone
-        className="mt-6 mb-8"
-        onDrop={async acceptedFiles => {
-          if (acceptedFiles.length > 0) {
-            const text = await acceptedFiles[0].text()
+      <div className="mt-6 mb-8">
+        <Dropzone
+          onDrop={async acceptedFiles => {
+            if (acceptedFiles.length > 0) {
+              const text = await acceptedFiles[0].text()
 
-            try {
-              setError(undefined)
-              const data = JSON.parse(text)
-              setData(habitKit.parse(data))
-            } catch (err) {
-              setError(err instanceof Error ? err : new Error('Unknown error'))
-              setData(undefined)
+              try {
+                setError(undefined)
+                const data = JSON.parse(text)
+                setData(habitKit.parse(data))
+              } catch (err) {
+                setError(err instanceof Error ? err : new Error('Unknown error'))
+                setData(undefined)
+              }
             }
-          }
-        }}
-      />
+          }}
+        />
+        <p className="mt-3 text-sm text-muted-foreground">
+          You can export your HabitKit data in the app settings.
+        </p>
+      </div>
 
       {/* TODO: year selection */}
 
       {/* TODO: handle validation errors */}
       {error && (
-        <div className="my-10 grid w-full max-w-md items-start gap-4">
+        <div className="my-10 grid w-full max-w-2xl items-start gap-4">
           <Alert variant="destructive">
             <CircleXIcon />
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error.message}</AlertDescription>
+            <AlertTitle>{error instanceof ZodError ? 'Schema mismatch' : 'Error'}</AlertTitle>
+            <AlertDescription>
+              {error instanceof ZodError ? (
+                <>
+                  <p>
+                    This file does not match the HabitKit export format this tool expects.
+                    <br />
+                    Double-check you selected the exported JSON file.
+                  </p>
+                  <p>
+                    If it still fails, please{' '}
+                    <a
+                      href="https://github.com/grubersjoe/habitkitty/issues/new"
+                      target="_blank"
+                      className="text-inherit hover:text-inherit"
+                    >
+                      open a GitHub issue
+                    </a>{' '}
+                    and paste the validation output below:
+                  </p>
+                  <CopyButton text={error.message}>Copy output</CopyButton>
+                  <pre className="mt-4">{error.message}</pre>
+                </>
+              ) : (
+                error.message
+              )}
+            </AlertDescription>
           </Alert>
         </div>
       )}

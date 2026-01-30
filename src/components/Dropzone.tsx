@@ -19,10 +19,7 @@ export function Dropzone({
   })
 
   return (
-    <div
-      className={cn('sm:max-w-86 md:max-w-80 flex flex-col gap-1', className)}
-      {...getRootProps()}
-    >
+    <div className={cn('sm:max-w-88 flex flex-col gap-1', className)} {...getRootProps()}>
       <input {...getInputProps()} />
 
       <button

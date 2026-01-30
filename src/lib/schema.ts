@@ -34,7 +34,7 @@ export const habitKit = z.object({
       color: z.enum(colors),
       archived: z.boolean(),
       orderIndex: z.number(),
-      createdAt: z.iso.datetime(),
+      createdAt: z.iso.datetime().transform(d => new Date(d)),
       isInverse: z.boolean(),
       emoji: z.string().nullable(),
     }),
@@ -42,7 +42,7 @@ export const habitKit = z.object({
   completions: z.array(
     z.object({
       id: z.uuid(),
-      date: z.iso.datetime(),
+      date: z.iso.datetime().transform(d => new Date(d)),
       habitId: z.uuid(),
       timezoneOffsetInMinutes: z.number(),
       amountOfCompletions: z.number(),
@@ -50,32 +50,21 @@ export const habitKit = z.object({
     }),
   ),
   intervals: z.array(
-    z.union([
-      z.object({
-        id: z.uuid(),
-        habitId: z.uuid(),
-        startDate: z.iso.datetime(),
-        endDate: z.iso.datetime().nullable(),
-        type: z.string(),
-        requiredNumberOfCompletions: z.number(),
-        requiredNumberOfCompletionsPerDay: z.number(),
-        unitType: z.string(),
-        streakType: z.string(),
-        allowExceedingGoal: z.boolean(),
-      }),
-      z.object({
-        id: z.uuid(),
-        habitId: z.uuid(),
-        startDate: z.iso.datetime(),
-        endDate: z.iso.datetime().nullable(),
-        type: z.string(),
-        requiredNumberOfCompletions: z.number().nullable(),
-        requiredNumberOfCompletionsPerDay: z.number(),
-        unitType: z.string(),
-        streakType: z.string(),
-        allowExceedingGoal: z.boolean(),
-      }),
-    ]),
+    z.object({
+      id: z.uuid(),
+      habitId: z.uuid(),
+      startDate: z.iso.datetime().transform(d => new Date(d)),
+      endDate: z.iso
+        .datetime()
+        .nullable()
+        .transform(d => (d ? new Date(d) : null)),
+      type: z.enum(['none', 'day', 'week', 'month']),
+      requiredNumberOfCompletions: z.number().nullable(),
+      requiredNumberOfCompletionsPerDay: z.number(),
+      unitType: z.string(),
+      streakType: z.string(),
+      allowExceedingGoal: z.boolean(),
+    }),
   ),
   reminders: z.array(z.unknown()),
   categories: z.array(
@@ -84,7 +73,7 @@ export const habitKit = z.object({
       name: z.string(),
       icon: z.string(),
       orderIndex: z.number(),
-      createdAt: z.iso.datetime(),
+      createdAt: z.iso.datetime().transform(d => new Date(d)),
     }),
   ),
   categoryMappings: z.array(
@@ -93,7 +82,7 @@ export const habitKit = z.object({
       habitId: z.uuid(),
       categoryId: z.uuid(),
       orderIndex: z.number(),
-      createdAt: z.iso.datetime(),
+      createdAt: z.iso.datetime().transform(d => new Date(d)),
     }),
   ),
 })
