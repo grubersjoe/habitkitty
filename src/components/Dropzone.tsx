@@ -33,7 +33,9 @@ export function Dropzone({
       </button>
 
       {rejectedFiles.length > 0 && (
-        <span className="my-2 text-red-600">Invalid file, try again.</span>
+        <span className="text-destructive text-sm mt-3">
+          Invalid file, please try again. Pick the exported HabitKit JSON file.
+        </span>
       )}
     </div>
   )
