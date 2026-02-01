@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { addMinutes } from 'date-fns'
 
 const colors = [
   'red',
@@ -40,14 +41,19 @@ export const habitKit = z.object({
     }),
   ),
   completions: z.array(
-    z.object({
-      id: z.uuid(),
-      date: z.iso.datetime().transform(d => new Date(d)),
-      habitId: z.uuid(),
-      timezoneOffsetInMinutes: z.number(),
-      amountOfCompletions: z.number(),
-      note: z.string().nullable(),
-    }),
+    z
+      .object({
+        id: z.uuid(),
+        date: z.iso.datetime(),
+        habitId: z.uuid(),
+        timezoneOffsetInMinutes: z.number(),
+        amountOfCompletions: z.number(),
+        note: z.string().nullable(),
+      })
+      .transform(c => ({
+        ...c,
+        date: addMinutes(c.date, c.timezoneOffsetInMinutes),
+      })),
   ),
   intervals: z.array(
     z.object({
@@ -62,7 +68,7 @@ export const habitKit = z.object({
       requiredNumberOfCompletions: z.number().nullable(),
       requiredNumberOfCompletionsPerDay: z.number(),
       unitType: z.string(),
-      streakType: z.string(),
+      streakType: z.enum(['day']),
       allowExceedingGoal: z.boolean(),
     }),
   ),
@@ -90,3 +96,5 @@ export const habitKit = z.object({
 export type HabitKit = z.infer<typeof habitKit>
 
 export type Habit = HabitKit['habits'][number]
+export type Completion = HabitKit['completions'][0]
+export type Interval = HabitKit['intervals'][0]
