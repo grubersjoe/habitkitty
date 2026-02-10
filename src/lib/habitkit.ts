@@ -61,12 +61,11 @@ export const getStreak = (
     'type' | 'requiredNumberOfCompletionsPerDay' | 'requiredNumberOfCompletions'
   >,
   weekStartsOn: Day,
+  today = startOfToday(),
 ) => {
   if (completions.length === 0) {
     return 0
   }
-
-  const today = startOfToday()
 
   const key = (d: Date) => d.toDateString()
   const completionsPerDay = completions.reduce(
