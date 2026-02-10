@@ -138,7 +138,7 @@
   }
 
   h2 {
-    @apply font-semibold text-xl text-balance mb-2.5;
+    @apply font-semibold text-xl text-balance;
 
     @media (width >= 48rem) {
       @apply text-2xl;

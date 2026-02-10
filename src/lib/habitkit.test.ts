@@ -1,20 +1,21 @@
 import { describe, expect, test } from 'vitest'
-import { getStreak } from '@/lib/habitkit.ts'
-import { endOfWeek, subDays } from 'date-fns'
+import { calcStreak } from '@/lib/habitkit.ts'
+import { endOfWeek, subDays, subYears } from 'date-fns'
 
-describe('getStreak()', () => {
+describe('calcStreak()', () => {
   const now = new Date()
 
   describe('type none', () => {
     test('should return 0 for "none" type streaks', () => {
       for (const weekStart of [0, 1, 2, 3, 4, 5, 6] as const) {
         expect(
-          getStreak(
+          calcStreak(
             [{ date: now, amountOfCompletions: 1 }],
             {
               type: 'none',
               requiredNumberOfCompletions: null,
               requiredNumberOfCompletionsPerDay: 1,
+              startDate: subYears(now, 1),
             },
             weekStart,
           ),
@@ -103,12 +104,13 @@ describe('getStreak()', () => {
     ])('%s', (_, { completions, requiredPerDay, expected }) => {
       for (const weekStart of [0, 1, 2, 3, 4, 5, 6] as const) {
         expect(
-          getStreak(
+          calcStreak(
             completions,
             {
               type: 'day',
               requiredNumberOfCompletions: null,
               requiredNumberOfCompletionsPerDay: requiredPerDay,
+              startDate: subYears(now, 1),
             },
             weekStart,
           ),
@@ -175,12 +177,13 @@ describe('getStreak()', () => {
       ],
     ])('%s', (_, { completions, required, requiredPerDay, expected }) => {
       expect(
-        getStreak(
+        calcStreak(
           completions,
           {
             type: 'week',
             requiredNumberOfCompletions: required,
             requiredNumberOfCompletionsPerDay: requiredPerDay,
+            startDate: subYears(now, 1),
           },
           0,
           endOfWeek(now),

@@ -12,23 +12,17 @@ import {
   isWithinInterval,
   startOfToday,
 } from 'date-fns'
-import type { Completion, HabitKit, Interval } from '@/lib/schema.ts'
+import type { Completion, Interval } from '@/lib/schema.ts'
 
 export const getActivitiesFor = (
-  data: HabitKit,
-  habitId: string,
+  completions: Completion[],
+  interval: Interval,
   year: number,
 ): { activities: Activity[]; maxLevel: number } => {
-  const interval = data.intervals.find(i => i.habitId === habitId)
-
-  if (!interval) {
-    throw new Error(`Habit ${habitId} not found`)
-  }
-
   const { requiredNumberOfCompletionsPerDay } = interval
 
-  const rawActivities = data.completions
-    .filter(c => c.habitId === habitId && getYear(c.date) === year)
+  const rawActivities = completions
+    .filter(c => getYear(c.date) === year)
     .map(c => ({
       date: format(c.date, 'yyyy-MM-dd'),
       level: c.amountOfCompletions,
@@ -54,11 +48,11 @@ export const getActivitiesFor = (
   return { activities, maxLevel: requiredNumberOfCompletionsPerDay }
 }
 
-export const getStreak = (
+export const calcStreak = (
   completions: Pick<Completion, 'date' | 'amountOfCompletions'>[],
   habitInterval: Pick<
     Interval,
-    'type' | 'requiredNumberOfCompletionsPerDay' | 'requiredNumberOfCompletions'
+    'type' | 'requiredNumberOfCompletionsPerDay' | 'requiredNumberOfCompletions' | 'startDate'
   >,
   weekStartsOn: Day,
   today = startOfToday(),
@@ -103,7 +97,7 @@ export const getStreak = (
   // Sort oldest -> newest
   completions = completions.sort((a, b) => a.date.getTime() - b.date.getTime())
 
-  const allDays = { start: today, end: completions[0].date }
+  const allDays = { start: today, end: habitInterval.startDate }
 
   if (habitInterval.type === 'day') {
     let streak = 0
@@ -151,5 +145,18 @@ export const getStreak = (
     }
 
     return streak
+  }
+}
+
+export const printInterval = (interval: Interval) => {
+  switch (interval.type) {
+    case 'none':
+      return ''
+    case 'day':
+      return `${interval.requiredNumberOfCompletions} / Day`
+    case 'week':
+      return `${interval.requiredNumberOfCompletions} / Week`
+    case 'month':
+      return `${interval.requiredNumberOfCompletions} / Month`
   }
 }
