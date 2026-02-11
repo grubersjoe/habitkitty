@@ -65,8 +65,8 @@ export const habitKit = z.object({
         .nullable()
         .transform(d => (d ? new Date(d) : null)),
       type: z.enum(['none', 'day', 'week', 'month']),
-      requiredNumberOfCompletions: z.number().nullable(),
-      requiredNumberOfCompletionsPerDay: z.number(),
+      requiredNumberOfCompletions: z.number().min(1).nullable(),
+      requiredNumberOfCompletionsPerDay: z.number().min(1),
       unitType: z.string(),
       streakType: z.enum(['day']),
       allowExceedingGoal: z.boolean(),

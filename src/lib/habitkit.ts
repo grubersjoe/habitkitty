@@ -8,8 +8,6 @@ import {
   endOfWeek,
   format,
   getYear,
-  type Interval as DateInterval,
-  isWithinInterval,
   startOfToday,
 } from 'date-fns'
 import type { Completion, Interval } from '@/lib/schema.ts'
@@ -50,7 +48,7 @@ export const getActivitiesFor = (
 
 export const calcStreak = (
   completions: Pick<Completion, 'date' | 'amountOfCompletions'>[],
-  habitInterval: Pick<
+  interval: Pick<
     Interval,
     'type' | 'requiredNumberOfCompletionsPerDay' | 'requiredNumberOfCompletions' | 'startDate'
   >,
@@ -61,7 +59,7 @@ export const calcStreak = (
     return 0
   }
 
-  const key = (d: Date) => d.toDateString()
+  const key = (d: Date) => format(d, 'yyyy-MM-dd')
   const completionsPerDay = completions.reduce(
     (acc, { date, amountOfCompletions }) => {
       acc[key(date)] = amountOfCompletions
@@ -70,82 +68,43 @@ export const calcStreak = (
     {} as Record<string, number>,
   )
 
-  const streakForInterval = (interval: DateInterval) => {
+  if (interval.type === 'none') {
+    return 0
+  }
+
+  const allDays = { start: today, end: interval.startDate }
+
+  const intervals = {
+    day: eachDayOfInterval(allDays),
+    week: eachWeekOfInterval(allDays, { weekStartsOn }),
+    month: eachMonthOfInterval(allDays),
+  }
+
+  const intervalBounds = {
+    day: (date: Date) => ({ start: date, end: date }),
+    week: (date: Date) => ({ start: date, end: endOfWeek(date, { weekStartsOn }) }),
+    month: (date: Date) => ({ start: date, end: endOfMonth(date) }),
+  }
+
+  let totalStreak = 0
+  for (const [i, day] of intervals[interval.type].entries()) {
+    const bounds = intervalBounds[interval.type](day)
+
     let streak = 0
-    for (const day of eachDayOfInterval(interval)) {
-      if (completionsPerDay[key(day)] >= habitInterval.requiredNumberOfCompletionsPerDay) {
+    for (const d of eachDayOfInterval(bounds)) {
+      if (completionsPerDay[key(d)] >= interval.requiredNumberOfCompletionsPerDay) {
         streak++
       }
     }
 
-    // All completions count in the current interval.
-    if (isWithinInterval(today, interval)) {
-      return streak
+    if (i > 0 && streak < (interval.requiredNumberOfCompletions ?? 1)) {
+      break
     }
 
-    if (streak < (habitInterval.requiredNumberOfCompletions ?? 0)) {
-      return 0
-    }
-
-    return streak
+    totalStreak += streak
   }
 
-  if (habitInterval.type === 'none') {
-    return 0
-  }
-
-  // Sort oldest -> newest
-  completions = completions.sort((a, b) => a.date.getTime() - b.date.getTime())
-
-  const allDays = { start: today, end: habitInterval.startDate }
-
-  if (habitInterval.type === 'day') {
-    let streak = 0
-    for (const [i, day] of eachDayOfInterval(allDays).entries()) {
-      const forInterval = streakForInterval({ start: day, end: day })
-
-      if (i > 0 && forInterval === 0) {
-        break
-      }
-
-      streak += forInterval
-    }
-
-    return streak
-  }
-
-  if (habitInterval.type === 'week') {
-    let streak = 0
-    for (const [i, weekStart] of eachWeekOfInterval(allDays, { weekStartsOn }).entries()) {
-      const forInterval = streakForInterval({
-        start: weekStart,
-        end: endOfWeek(weekStart, { weekStartsOn }),
-      })
-
-      if (i > 0 && forInterval === 0) {
-        break
-      }
-
-      streak += forInterval
-    }
-
-    return streak
-  }
-
-  if (habitInterval.type === 'month') {
-    let streak = 0
-    for (const [i, monthStart] of eachMonthOfInterval(allDays).entries()) {
-      const forInterval = streakForInterval({ start: monthStart, end: endOfMonth(monthStart) })
-
-      if (i > 0 && forInterval === 0) {
-        break
-      }
-
-      streak += forInterval
-    }
-
-    return streak
-  }
+  return totalStreak
 }
 
 export const printInterval = (interval: Interval) => {
