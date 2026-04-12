@@ -1,5 +1,5 @@
-import {z} from 'zod'
-import {addMinutes} from 'date-fns'
+import { z } from 'zod'
+import { addMinutes } from 'date-fns'
 
 const colors = [
   'red',
