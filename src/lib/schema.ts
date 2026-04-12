@@ -1,4 +1,5 @@
-import { z } from 'zod'
+import {z} from 'zod'
+import {addMinutes} from 'date-fns'
 
 const colors = [
   'red',
@@ -90,3 +91,17 @@ export const habitKit = z.object({
 export type HabitKit = z.infer<typeof habitKit>
 
 export type Habit = HabitKit['habits'][number]
+
+export function loadData(rawJson: string): HabitKit {
+  const json = JSON.parse(rawJson)
+  const data = habitKit.parse(json)
+
+  // Unfortunately, dates are not stored in UTC, so convert.
+  for (const c of data.completions) {
+    c.date = addMinutes(c.date, c.timezoneOffsetInMinutes)
+  }
+
+  data.completions.sort((a, b) => a.date.getTime() - b.date.getTime())
+
+  return data
+}

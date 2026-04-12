@@ -1,11 +1,11 @@
 import type { Activity } from 'react-activity-calendar'
-import { addMinutes, format, getYear } from 'date-fns'
+import { addDays, format, isBefore, isSameDay, parseISO, startOfToday, subYears } from 'date-fns'
 import type { HabitKit } from '@/lib/schema.ts'
 
-export const getActivitiesFor = (
+export const getActivities = (
   data: HabitKit,
   habitId: string,
-  year: number,
+  numberOfYears: number = 1,
 ): { activities: Activity[]; maxLevel: number } => {
   const interval = data.intervals.find(i => i.habitId === habitId)
 
@@ -13,34 +13,41 @@ export const getActivitiesFor = (
     throw new Error(`Habit ${habitId} not found`)
   }
 
-  const { requiredNumberOfCompletionsPerDay } = interval
+  const today = startOfToday()
+  const calendarStart = addDays(subYears(today, numberOfYears), 1)
 
-  const rawActivities = data.completions
-    .filter(c => {
-      const date = addMinutes(c.date, c.timezoneOffsetInMinutes)
-      return c.habitId === habitId && getYear(date) === year
-    })
+  const activities = data.completions
+    .filter(c => c.habitId === habitId && !isBefore(c.date, calendarStart))
     .map(c => ({
-      date: format(addMinutes(c.date, c.timezoneOffsetInMinutes), 'yyyy-MM-dd'),
+      date: format(c.date, 'yyyy-MM-dd'),
       level: c.amountOfCompletions,
       count: c.amountOfCompletions,
     }))
 
-  if (rawActivities.length === 0) {
-    return { activities: [], maxLevel: requiredNumberOfCompletionsPerDay }
+  if (activities.length === 0) {
+    return { activities: [], maxLevel: interval.requiredNumberOfCompletionsPerDay }
   }
 
-  const isFullYear =
-    rawActivities[0].date === `${year}-01-01` &&
-    rawActivities[rawActivities.length - 1].date === `${year}-12-31`
+  // left-pad
+  if (!isSameDay(parseISO(activities[0].date), calendarStart)) {
+    activities.unshift({
+      date: format(calendarStart, 'yyyy-MM-dd'),
+      level: 0,
+      count: 0,
+    })
+  }
 
-  const activities = isFullYear
-    ? rawActivities
-    : [
-        { date: `${year}-01-01`, level: 0, count: 0 },
-        ...rawActivities,
-        { date: `${year}-12-31`, level: 0, count: 0 },
-      ]
+  // right-pad
+  if (!isSameDay(parseISO(activities[activities.length - 1].date), today)) {
+    activities.push({
+      date: format(today, 'yyyy-MM-dd'),
+      level: 0,
+      count: 0,
+    })
+  }
 
-  return { activities, maxLevel: requiredNumberOfCompletionsPerDay }
+  return {
+    activities,
+    maxLevel: interval.requiredNumberOfCompletionsPerDay,
+  }
 }

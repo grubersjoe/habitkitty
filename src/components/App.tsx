@@ -3,7 +3,7 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { ZodError } from 'zod'
 import { CircleX as CircleXIcon } from 'lucide-react'
 
-import { habitKit, type HabitKit } from '@/lib/schema.ts'
+import { type HabitKit, loadData } from '@/lib/schema.ts'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert.tsx'
 import { Calendar } from '@/components/Calendar.tsx'
 import { CopyButton } from '@/components/CopyButton.tsx'
@@ -14,7 +14,6 @@ export function App() {
   const [data, setData] = useState<HabitKit>()
   const [error, setError] = useState<Error>()
 
-  const year = 2026 // FIXME
   const habits =
     data?.habits
       .filter(({ archived }) => !archived)
@@ -39,12 +38,9 @@ export function App() {
         <Dropzone
           onDrop={async acceptedFiles => {
             if (acceptedFiles.length > 0) {
-              const text = await acceptedFiles[0].text()
-
               try {
                 setError(undefined)
-                const data = JSON.parse(text)
-                setData(habitKit.parse(data))
+                setData(loadData(await acceptedFiles[0].text()))
               } catch (err) {
                 setError(err instanceof Error ? err : new Error('Unknown error'))
                 setData(undefined)
@@ -101,7 +97,7 @@ export function App() {
             <div key={habit.id}>
               <h2>{habit.name}</h2>
               <ErrorBoundary fallback="Error loading habit">
-                <Calendar data={data} habit={habit} year={year} />
+                <Calendar data={data} habit={habit} />
               </ErrorBoundary>
             </div>
           ))}
