@@ -38,10 +38,14 @@ export const Calendar = ({ data, habit, year }: Props) => {
           text: activity => `${activity.count} completion on ${activity.date}`,
         },
       }}
-      showColorLegend={false}
+      showColorLegend={maxLevel > 1}
       weekStart={1}
       labels={{
         totalCount: `{{count}} completions in {{year}}`,
+        legend: {
+          less: '',
+          more: String(maxLevel),
+        },
       }}
     />
   )
